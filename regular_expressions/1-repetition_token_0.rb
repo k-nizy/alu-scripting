@@ -1,14 +1,7 @@
 #!/usr/bin/env ruby
-# This script matches strings that start with 'hb', followed by 2 or more 't's, and end with 'n'
+# This script matches strings starting with 'hb', followed by 2-3 't's, and ending with 'n'
 
-if ARGV.length != 1
-  puts "Usage: #{__FILE__} <string>"
-  exit 1
-end
+input = ARGV[0] || ""
+matches = input.match(/^hbt{2,3}n$/)
 
-input = ARGV[0]
-if input.match?(/^hbt{2,}n$/)
-  puts "Correct output with #{input}"
-else
-  puts ""
-end
+puts matches ? matches[0] : ""
