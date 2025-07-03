@@ -1,45 +1,26 @@
 #!/usr/bin/python3
-"""
-This module defines the recurse function which recursively queries
-the Reddit API and returns a list of titles for all hot posts
-in a given subreddit.
-"""
-
+"""docs"""
 import requests
 
 
 def recurse(subreddit, hot_list=[], after=None):
-    """
-    Recursively retrieves all hot post titles for a given subreddit.
+    """"Doc"""
+    url = "https://www.reddit.com/r/{}/hot.json" \
+        .format(subreddit)
+    header = {'User-Agent': 'Mozilla/5.0'}
+    param = {'after': after}
+    resopnse = requests.get(url, headers=header, params=param)
 
-    Args:
-        subreddit (str): The name of the subreddit.
-        hot_list (list): List of titles accumulated (default: []).
-        after (str): ID of the next page to fetch (default: None).
-
-    Returns:
-        list or None: List of titles, or None if invalid subreddit.
-    """
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    headers = {'User-Agent': 'python:sub.recurse:v1.0 (by /u/yourusername)'}
-    params = {'after': after, 'limit': 100}
-
-    try:
-        response = requests.get(
-            url, headers=headers, params=params, allow_redirects=False)
-        if response.status_code != 200:
-            return None
-
-        data = response.json().get("data", {})
-        posts = data.get("children", [])
-
-        for post in posts:
-            hot_list.append(post.get("data", {}).get("title"))
-
-        next_after = data.get("after")
-        if next_after is not None:
-            return recurse(subreddit, hot_list, next_after)
-        return hot_list
-
-    except Exception:
+    if resopnse.status_code != 200:
         return None
+    else:
+        json_res = resopnse.json()
+        after = json_res.get('data').get('after')
+        has_next = \
+            json_res.get('data').get('after') is not None
+        hot_articles = json_res.get('data').get('children')
+        [hot_list.append(article.get('data').get('title'))
+         for article in hot_articles]
+
+        return recurse(subreddit, hot_list, after=after) \
+            if has_next else hot_list

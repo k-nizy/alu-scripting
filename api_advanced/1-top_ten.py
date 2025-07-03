@@ -1,28 +1,18 @@
 #!/usr/bin/python3
-"""
-Module to print titles of the first 10 hot posts of a subreddit
-"""
-
+"""DOCS"""
 import requests
 
 
 def top_ten(subreddit):
-    """
-    Prints the titles of the first 10 hot posts for a given subreddit.
-    Does nothing if the subreddit is invalid or request fails.
-    """
-    url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
-    headers = {
-        "User-Agent": "Mozilla/5dditBot/1.0; +https://github.com/yourusername)"
-    }
+    """Docs"""
+    reddit_url = "https://www.reddit.com/r/{}/hot.json" \
+        .format(subreddit)
+    headers = headers = {'User-agent': 'Mozilla/5.0'}
+    response = requests.get(reddit_url, headers=headers)
 
-    try:
-        response = requests.get(url, headers=headers, allow_redirects=False)
-        if response.status_code != 200:
-            return
-
-        posts = response.json().get("data", {}).get("children", [])
-        for post in posts:
-            print(post.get("data", {}).get("title"))
-    except Exception:
-        return
+    if response.status_code == 200:
+        data = response.json()['data']
+        for post in data['children'][:10]:
+            print(post['data']['title'])
+    else:
+        print(None)
