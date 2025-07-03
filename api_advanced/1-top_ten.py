@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """
-This module defines the top_ten function that prints the titles
-of the first 10 hot posts for a given subreddit using the Reddit API.
+Module to print titles of the first 10 hot posts of a subreddit
 """
 
 import requests
@@ -9,28 +8,26 @@ import requests
 
 def top_ten(subreddit):
     """
-    Queries the Reddit API and prints the titles of the first
-    10 hot posts listed for a given subreddit.
-
-    Args:
-        subreddit (str): The name of the subreddit.
-
-    Returns:
-        None
+    Prints the titles of the first 10 hot posts for a given subreddit.
+    Prints None if the subreddit is invalid or request fails.
     """
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    headers = {'User-Agent': 'python:sub.topten:v1.0 (by /u/yourusername)'}
-    params = {'limit': 10}
+    url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
+    headers = {
+        "User-Agent": "Moz; MyRedditBot/1.0; +https://github.com/yourusername)"
+    }
 
     try:
-        response = requests.get(url, headers=headparams, allow_redirects=False)
+        response = requests.get(url, headers=headers, allow_redirects=False)
         if response.status_code != 200:
-            print("None")
+            print(None)
             return
 
-        data = response.json()
-        posts = data.get("data", {}).get("children", [])
-        for post in posts:
+        data = response.json().get("data", {}).get("children", [])
+        if not data:
+            print(None)
+            return
+
+        for post in data:
             print(post.get("data", {}).get("title"))
-    except Exception:
-        print("None")
+    except requests.RequestException:
+        print(None)
