@@ -13,7 +13,7 @@ def number_of_subscribers(subreddit):
     """
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
     headers = {
-        "User-Agent": "Mozilla/5.0 (compatible; MyRedditBot/1.0; +https://github.com/yourusername)"
+        "User-Agent": "Mozilla/5.0 (compati; +https://github.com/yourusername)"
     }
 
     try:
@@ -25,4 +25,3 @@ def number_of_subscribers(subreddit):
             return 0
     except requests.RequestException:
         return 0
-
