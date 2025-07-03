@@ -13,7 +13,7 @@ def top_ten(subreddit):
     """
     url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
     headers = {
-        "User-Agent": "Mozilla/5.0 (cot/1.0; +https://github.com/yourusername)"
+        "User-Agent": "Mozilla/5dditBot/1.0; +https://github.com/yourusername)"
     }
 
     try:
@@ -24,5 +24,5 @@ def top_ten(subreddit):
         posts = response.json().get("data", {}).get("children", [])
         for post in posts:
             print(post.get("data", {}).get("title"))
-    except requests.RequestException:
+    except Exception:
         return
